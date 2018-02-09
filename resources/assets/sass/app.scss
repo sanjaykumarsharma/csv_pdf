@@ -1,0 +1,20 @@
+// Fonts
+@import url("https://fonts.googleapis.com/css?family=Roboto+Mono:500,700");
+//@import url("https://use.fontawesome.com/releases/v5.0.6/css/all.css");
+// Variables
+@import "variables";
+// Bootstrap
+@import "~bootstrap/scss/bootstrap";
+nav {
+    background-color: #001b44;
+}
+
+nav a,
+li {
+    color: #FFF;
+}
+
+.alert-danger {
+    // color: #f75d21;
+    background-color: #f55875 !important;
+}
