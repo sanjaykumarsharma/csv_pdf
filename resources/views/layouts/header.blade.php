@@ -14,7 +14,8 @@
                         <li class="nav-item"><a href="{{ route('login') }}" class="nav-link">Login</a></li>
                         <li class="nav-item"><a href="{{ route('register') }}" class="nav-link">Register</a></li>
                     @else
-                        <li class="nav-item"><a href="{{ url('/batches') }}" class="nav-link">Batch</a></li>
+                        {{--  <li class="nav-item"><a href="{{ url('/batches') }}" class="nav-link">Batch</a></li>  --}}
+                        <li class="nav-item"><a href="{{ url('/books') }}" class="nav-link">Books</a></li>
                         <li class="nav-item dropdown">
                             <a href="#" class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown"
                                aria-haspopup="true" aria-expanded="false">

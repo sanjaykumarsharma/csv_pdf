@@ -9,7 +9,7 @@
             <div class="card-header"><h3>Upload Book</h3></div>
 
             <div class="card-body">
-                <form method="post" action="books" enctype="multipart/form-data">
+                <form method="post" action="{{ route('books.store') }}" enctype="multipart/form-data">
                     {{ csrf_field() }}
                     <div class="form-group">
                         <label for="upload-file">Upload</label>

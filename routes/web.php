@@ -26,8 +26,10 @@ Route::middleware(['auth'])->group(function () {
 
     Route::resource('batches', 'BatchesController');
 
-    Route::get('books', 'BookController@index');
-    Route::post('books', 'BookController@store');
+    Route::get('books', 'BookController@index')->name('books.index');;
+    Route::get('books/create', 'BookController@create');
+    Route::get('books/{id}', 'BookController@show');
+    Route::post('books', 'BookController@store')->name('books.store');
     // Route::post('upload', 'BudgetController@store');
 
 });

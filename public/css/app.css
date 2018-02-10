@@ -10007,3 +10007,7 @@ li {
   background-color: #f55875 !important;
 }
 
+.bnone td {
+  border-top: none !important;
+}
+
