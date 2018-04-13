@@ -2,6 +2,12 @@
 
 @section('content')
 
+<div class="row mb-1">
+    <div class="col-6"><h2>Records</h2></div>
+    <div class="col-6">
+        <a class="float-right btn btn-info" href="{{ route('books.index') }}">Add</a>
+    </div>
+</div>
 
 <div class="row mt-4">
     <div class="col-md-4 offset-md-4">

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Book;
 
@@ -10,7 +11,41 @@ class BookController extends Controller
     public function index()
     {
         $books = Book::all();
-        return view('book.index', ['books'=> $books]);
+
+        //$user = DB::table('users')->where('name', 'John')->first();
+        //$users = DB::table('users')->distinct()->get();
+        $countries = DB::table('books')->select('country')->distinct()->get();
+        $brands = DB::table('books')->select('brand')->distinct()->get();
+
+        return view('book.index', ['books'=> $books, 'countries'=>$countries, 'brands'=>$brands]);
+
+    }
+
+    public function filter(Request $request)
+    {
+        $country = $request->input('country');
+        $brand = $request->input('brand');
+
+        $books = array();
+
+        if($country=='All' and $brand=='All'){
+            $books = Book::all();
+        }elseif($country!='All' and $brand!='All'){
+            $books = Book::where('country', $country)
+                          ->where('brand', $brand)
+                          ->get();
+        }elseif($country!='All' and $brand=='All'){
+            $books = Book::where('country', $country)
+                       ->get();
+        }elseif($country=='All' and $brand!='All'){
+            $books = Book::where('brand', $brand)
+                       ->get();
+        }
+
+        $countries = DB::table('books')->select('country')->distinct()->get();
+        $brands = DB::table('books')->select('brand')->distinct()->get();
+
+        return view('book.index', ['books'=> $books, 'countries'=>$countries, 'brands'=>$brands, 'country'=>$country, 'brand'=>$brand]);
 
     }
 
@@ -30,9 +65,25 @@ class BookController extends Controller
 
         $header1= fgetcsv($file);
 
-        $header=['region','country','operator','brand','host_network','technology','mvno_category','mvno_type','subscriber','parent_owner','email','telephone','fax','linkedin','website','headquarter','established','regulator','company_overview'];
+        $header=['region',
+                 'country',
+                 'rank',
+                 'brand',
+                 'operator',
+                 'technology',
+                 'subscriber',
+                 'parent_owner',
+                 'email',
+                 'telephone',
+                 'fax',
+                 'linkedin',
+                 'website',
+                 'headquarter',
+                 'established',
+                 'regulator',
+                 'company_overview'];
 
-         //dd($header1);
+        // dd($header1);
 
         // $escapedHeader=[];
         // //validate
@@ -62,10 +113,8 @@ class BookController extends Controller
             $country=utf8_encode($data['country']);
             $operator=utf8_encode($data['operator']);
             $brand=utf8_encode($data['brand']);
-            $host_network=utf8_encode($data['host_network']);
-            $technology=utf8_encode('');
-            $mvno_category=utf8_encode($data['mvno_category']);
-            $mvno_type=utf8_encode($data['mvno_type']);
+            $technology=utf8_encode($data['technology']);
+            $rank=utf8_encode($data['rank']);
             $subscriber=utf8_encode($data['subscriber']);
             $parent_owner=utf8_encode($data['parent_owner']);
             $email=utf8_encode($data['email']);
@@ -79,16 +128,14 @@ class BookController extends Controller
             $company_overview=utf8_encode($data['company_overview']);
 
 
-            //$budget= Book::firstOrNew(['region'=>$region,'country'=>$country,'operator'=>$operator,'brand'=>$brand,'host_network'=>$host_network,'technology'=>$technology,'mvno_category'=>$mvno_category,'mvno_type'=>$mvno_type,'subscriber'=>$subscriber,'parent_owner'=>$parent_owner,'email'=>$email,'telephone'=>$telephone,'fax'=>$fax,'linkedin'=>$linkedin,'website'=>$website,'headquarter'=>$headquarter,'established'=>$established,'regulator'=>$regulator,'company_overview'=>$company_overview]);
+            //$budget= Book::firstOrNew(['region'=>$region,'country'=>$country,'operator'=>$operator,'brand'=>$brand,'host_network'=>$host_network,'technology'=>$technology,'rank'=>$rank,'mvno_type'=>$mvno_type,'subscriber'=>$subscriber,'parent_owner'=>$parent_owner,'email'=>$email,'telephone'=>$telephone,'fax'=>$fax,'linkedin'=>$linkedin,'website'=>$website,'headquarter'=>$headquarter,'established'=>$established,'regulator'=>$regulator,'company_overview'=>$company_overview]);
             $budget = new Book;
             $budget->region=$region;
             $budget->country=$country;
             $budget->operator=$operator;
             $budget->brand=$brand;
-            $budget->host_network=$host_network;
             $budget->technology=$technology;
-            $budget->mvno_category=$mvno_category;
-            $budget->mvno_type=$mvno_type;
+            $budget->rank=$rank;
             $budget->subscriber=$subscriber;
             $budget->parent_owner=$parent_owner;
             $budget->email=$email;
@@ -102,9 +149,11 @@ class BookController extends Controller
             $budget->company_overview=$company_overview;
             $budget->save();
 
-            return redirect()->route('books.index')
-                             ->with('success', 'Book uploaded successfully');
+
         }
+
+        return redirect()->route('books.index')
+                             ->with('success', 'Book uploaded successfully');
 
 
     }
@@ -113,6 +162,13 @@ class BookController extends Controller
     {
         $findBook = Book::find($id);
         return view('book.show', ['book'=>$findBook]);
+    }
+
+    public function print()
+    {
+        $findBook = Book::all();
+        //dd($findBook);
+        return view('book.show', ['books'=>$findBook]);
     }
 
 }
